@@ -199,7 +199,7 @@ public class GlobalExceptionHandler {
         log.error("内部异常 ,message {}", opeContent);
         String errorMsg = ExceptionUtils.getRootCauseMessage(e);
         String[] split = opeContent.split("\\n");
-        if (ObjectUtils.isNotEmpty(split) && split.length >= 2) {
+        if (Objects.nonNull(split) && split.length >= 2) {
             errorMsg = split[0] + " " + split[1];
             errorMsg = errorMsg.replaceAll("\t", " ").replaceAll("\r", " ");
         }
