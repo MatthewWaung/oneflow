@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oneflow.prm.mapper.ImportMapper">
+
+
+    <insert id="importExcel">
+        insert into prm_country (country_code, country_name, nationality, language_code)
+        values
+        <foreach collection="excelList" item="country" separator=",">
+            (#{country.countryCode}, #{country.countryName}, #{country.nationality}, #{country.languageCode})
+        </foreach>
+    </insert>
+
+
+    <insert id="importForeignRegion">
+        insert into prm_foreign_region (country_code, region, description, region_tax_code)
+        values
+        <foreach collection="foreignList" item="region" separator=",">
+            (#{region.countryCode}, #{region.region}, #{region.description}, #{region.regionTaxCode})
+        </foreach>
+    </insert>
+
+    <insert id="importCurrency">
+        insert into prm_currency (currency, currency_name, iso_code, currency_desc, create_time)
+        values
+        <foreach collection="currencyList" item="currency" separator=",">
+            (#{currency.currency}, #{currency.currencyName}, #{currency.isoCode}, #{currency.currencyDesc},
+            now())
+        </foreach>
+    </insert>
+
+
+</mapper>

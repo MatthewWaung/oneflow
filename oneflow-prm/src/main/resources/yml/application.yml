@@ -1,0 +1,93 @@
+# application.yml是各个服务的共有的通用配置
+spring:
+  profiles:
+    active: dev
+  # 数据库配置——建议在每个服务的配置中配，因为不同的服务可能连接不同的数据库
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/local?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Hongkong
+    username: root
+    password: root123
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: root@123
+    # 使用lettuce或者jedis
+    lettuce:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: itmq
+    password: root@123
+    virtual-host: dev_vhost
+  # 多语言配置
+  messages:
+    basename: i18n/message
+    cache-duration: 3600
+    encoding: UTF-8
+  # 设置tomcat文件上传大小限制
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# mybatis-plus其他配置可见：https://www.jianshu.com/p/e303da331bf0
+mybatis-plus:
+  # mybatis默认的mapper.xml路径地址是classpath*:/mapper/**/*.xml，如果不是需要通过以下配置设置
+  mapper-locations: classpath:/mapper/*.xml
+  # MyBatis 别名包扫描路径，通过该属性可以给包中的类注册别名，多个路径用逗号分割
+  type-aliases-package: com.oneflow.prm.entity.dao
+  configuration:
+    # mybatis-plus的驼峰映射，默认为true是打开的。false关闭后，可以使用@TableField做映射
+    map-underscore-to-camel-case: false
+    # 将sql打印在控制台上
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 将sql打印在日志文件中
+    log-impl: org.apache.ibatis.logging.log4j.Log4jImpl
+  #全局id设置自增，这样就不需要在每个类中的id加上idType注解的属性
+#  global-config:
+#    db-config:
+#      id-type: auto
+
+# 设置日志级别，可以将mybaits-plus的SQL语句打印出来
+logging:
+  level:
+    root: info
+    com.ecoflow: debug
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 600000
+
+#ribbon:
+#  readTimeout: 20000
+#  connectTimeout: 20000
+
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: 6Aioh
+  # 令牌有效期（默认30分钟）
+  expireTime: 240000
+  prefix: Bearer
+
+# ===== 自定义swagger配置 配合Swagger3Config使用 ===== #
+swagger:
+  enable: true
+  application-name: ${spring.application.name}
+  application-version: 1.0
+  application-description: springfox swagger 3.0整合Demo
+  try-host: http://localhost:${server.port}

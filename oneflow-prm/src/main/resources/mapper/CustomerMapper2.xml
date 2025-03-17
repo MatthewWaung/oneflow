@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oneflow.prm.mapper.CustomerMapper">
+
+    <resultMap id="Customer" type="com.oneflow.prm.entity.dao.customer.CustomerDO">
+        <result column="id" property="id"/>
+<!--        <result column="company_id" property="companyId"/>-->
+<!--        <result column="company_name" property="companyName"/>-->
+<!--        <result column="sales_organization" property="salesOrganization"/>-->
+<!--        <result column="sales_organization_id" property="salesOrganizationId"/>-->
+<!--        <result column="sales_area" property="salesArea"/>-->
+<!--        <result column="sales_area_id" property="salesAreaId"/>-->
+        <result column="country" property="country"/>
+        <result column="country_id" property="countryId"/>
+        <result column="customer_name" property="customerName"/>
+<!--        <result column="salesperson" property="salesperson"/>-->
+<!--        <result column="salesperson_id" property="salespersonId"/>-->
+<!--        <result column="customer_channel" property="customerChannel"/>-->
+<!--        <result column="international_trade_terms" property="internationalTradeTerms"/>-->
+<!--        <result column="currency" property="currency"/>-->
+<!--        <result column="payment_terms" property="paymentTerms"/>-->
+<!--        <result column="contact" property="contact"/>-->
+<!--        <result column="contact_phone" property="contactPhone"/>-->
+<!--        <result column="contact_email" property="contactEmail"/>-->
+<!--        <result column="bill_address" property="billAddress"/>-->
+        <result column="tax_no" property="taxNo"/>
+        <result column="status" property="status"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="tenant_id" property="tenantId"/>
+        <collection property="receiverList" javaType="java.util.ArrayList"
+                    ofType="com.oneflow.prm.entity.dao.customer.ReceiverDO"
+                    column="id" select="queryReceiver"/>
+        <collection property="addressList" javaType="java.util.ArrayList"
+                    ofType="com.oneflow.prm.entity.dao.customer.AddressDO"
+                    column="id" select="queryAddress"/>
+        <!--        <collection property="receiverList" resultMap="Receiver"></collection>-->
+        <!--        <collection property="addressList" resultMap="Address"></collection>-->
+
+    </resultMap>
+    <!-- 这种组装方式不是最好的方式，副表关联多条数据就会进行多次查询，这样性能就较低 -->
+    <select id="queryReceiver" resultType="com.oneflow.prm.entity.dao.customer.ReceiverDO">
+        select id,customer_id as customerId,customer_name as customerName,receiver,contact_way as contactWay,
+               email_address as emailAddress,status,create_by as createBy,create_time as createTime,
+               update_by as updateBy,update_time as updateTime,tenant_id as tenantId
+        from prm_customer_receiver pr
+        where pr.customer_id = #{id}
+    </select>
+
+    <select id="queryAddress" resultType="com.oneflow.prm.entity.dao.customer.AddressDO">
+        select id,customer_id as customerId,customer_name as customerName,country,country_id as countryId,
+               province,province_id as provinceId,city,city_id as cityId,detail_address as detailAddress,
+               status,create_by as createBy,create_time as createTime,update_by as updateBy,
+               update_time as updateTime,tenant_id as tenantId
+        from prm_customer_address pa
+        where pa.customer_id = #{id}
+    </select>
+
+    <select id="selectCustomer" resultMap="Customer">
+        select id,customer_name,company_id,company_name,sales_organization_id,sales_organization,sales_area_id,
+        sales_area,country,country_id,salesperson,salesperson_id,customer_channel,international_trade_terms,
+        currency,payment_terms,contact,contact_phone,contact_email,bill_address,tax_no,status,create_by,
+        create_time,update_by,update_time,tenant_id
+        from prm_customer pc
+        <where>
+            <if test="custInfoReq.customerId != null and custInfoReq.customerId != ''">
+                pc.id = #{custInfoReq.customerId}
+            </if>
+            <if test="custInfoReq.salespersonId != null and custInfoReq.salespersonId != ''">
+                and pc.salesperson_id = #{custInfoReq.salespersonId}
+            </if>
+            <if test="custInfoReq.contactId != null and custInfoReq.contactId != ''">
+                and pc.id = #{custInfoReq.contactId}
+            </if>
+        </where>
+        order by pc.id desc
+        limit #{page}, #{pageSize}
+    </select>
+
+    <select id="countList" resultType="Long">
+        select count(1)
+        from prm_customer pc
+        <where>
+            <if test="req.customerId != null and req.customerId != ''">
+                pc.id = #{req.customerId}
+            </if>
+            <if test="req.salespersonId != null and req.salespersonId != ''">
+                and pc.salesperson_id = #{req.salespersonId}
+            </if>
+            <if test="req.contactId != null and req.contactId != ''">
+                and pc.id = #{req.contactId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findCustomerByName" resultType="java.util.Map">
+        select id,customer_name as customerName from prm_customer where customer_name like concat('%', #{name}, '%')
+    </select>
+
+    <select id="findSalesperson" resultType="java.util.Map">
+        select user_id as userId, user_name as userName from sys_user where user_name like concat('%', #{name}, '%')
+    </select>
+
+    <select id="findContact" resultType="java.util.Map">
+        select id, contact from prm_customer where contact like concat('%', #{contact}, '%')
+    </select>
+
+    <update id="modifyCustStatus0">
+        update prm_customer pc set pc.`status` = '1' where pc.id = #{id}
+    </update>
+
+    <update id="modifyCustStatus1">
+        update prm_customer pc set pc.`status` = '0' where pc.id = #{id}
+    </update>
+
+    <update id="modifyReceiverStatus0">
+        update prm_customer_receiver pr set pr.`status` = '1' where pr.customer_id = #{id}
+    </update>
+
+    <update id="modifyReceiverStatus1">
+        update prm_customer_receiver pr set pr.`status` = '0' where pr.customer_id = #{id}
+    </update>
+
+    <update id="modifyAddressStatus0">
+        update prm_customer_address pa set pa.`status` = '1' where pa.customer_id = #{id}
+    </update>
+
+    <update id="modifyAddressStatus1">
+        update prm_customer_address pa set pa.`status` = '0' where pa.customer_id = #{id}
+    </update>
+
+    <update id="modifyStatus3">
+        update prm_customer pc, (select customer_id from prm_customer_receiver where customer_id = #{id}) pr,
+        (select customer_id from prm_customer_address where customer_id = #{id}) pa
+        set pc.`status` = '1', pr.`status` = '1', pa.`status` = '1'
+        <where>
+            pc.id = #{id}
+            <if test="pr.customer_id != null">
+                and pr.customer_id = #{id}
+            </if>
+            <if test="pa.customer_id != null">
+                and pa.customer_id = #{id}
+            </if>
+        </where>
+    </update>
+
+</mapper>

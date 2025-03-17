@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oneflow.prm.mapper.CustomerMapper">
+
+    <resultMap id="Customer1" type="com.oneflow.prm.entity.dao.customer.CustomerDO">
+        <result column="id" property="id"/>
+        <result column="customer_short_name" property="customerShortName"/>
+        <result column="country_id" property="countryId"/>
+        <result column="country" property="country"/>
+        <result column="province_id" property="provinceId"/>
+        <result column="province" property="province"/>
+        <result column="city_id" property="cityId"/>
+        <result column="city" property="city"/>
+        <result column="detail_address" property="detailAddress"/>
+        <result column="customer_phone" property="customerPhone"/>
+        <result column="customer_email" property="customerEmail"/>
+        <result column="customer_contact" property="customerContact"/>
+        <result column="tax_no" property="taxNo"/>
+        <result column="bank_country" property="bankCountry"/>
+        <result column="bank_code" property="bankCode"/>
+        <result column="open_bank_name" property="openBankName"/>
+        <result column="bank_account" property="bankAccount"/>
+        <result column="bank_account_name" property="bankAccountName"/>
+        <result column="status" property="status"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="tenant_id" property="tenantId"/>
+        <collection property="receiverList" ofType="com.oneflow.prm.entity.dao.customer.ReceiverDO"
+                    column="customer_id">
+            <result column="id" property="id"/>
+            <result column="customer_id" property="customerId"/>
+            <result column="customer_name" property="customerName"/>
+            <result column="receiver" property="receiver"/>
+            <result column="contact_way" property="contactWay"/>
+            <result column="email_address" property="emailAddress"/>
+            <result column="status" property="status"/>
+        </collection>
+        <collection property="addressList" ofType="com.oneflow.prm.entity.dao.customer.AddressDO"
+                    column="customer_id">
+            <result column="id" property="id"/>
+            <result column="customer_id" property="customerId"/>
+            <result column="customer_name" property="customerName"/>
+            <result column="country" property="country"/>
+            <result column="country_id" property="countryId"/>
+            <result column="province" property="province"/>
+            <result column="province_id" property="provinceId"/>
+            <result column="city" property="city"/>
+            <result column="city_id" property="cityId"/>
+            <result column="detail_address" property="detailAddress"/>
+            <result column="status" property="status"/>
+        </collection>
+        <collection property="salesViewList" ofType="com.oneflow.prm.entity.dao.customer.SalesViewDO"
+                    column="customer_id">
+            <result column="id" property="id"/>
+            <result column="customer_id" property="customerId"/>
+            <result column="customer_name" property="customerName"/>
+            <result column="sales_organization_id" property="salesOrganizationId"/>
+            <result column="sales_organization" property="salesOrganization"/>
+            <result column="sales_area_id" property="salesAreaId"/>
+            <result column="sales_area" property="salesArea"/>
+            <result column="nature_id" property="natureId"/>
+            <result column="nature" property="nature"/>
+            <result column="sales_type_id" property="salesTypeId"/>
+            <result column="sales_type" property="salesType"/>
+            <result column="channel_id" property="channelId"/>
+            <result column="channel" property="channel"/>
+            <result column="currency_id" property="currencyId"/>
+            <result column="currency" property="currency"/>
+            <result column="payment_terms_id" property="paymentTermsId"/>
+            <result column="payment_terms" property="paymentTerms"/>
+            <result column="international_trade_terms_id" property="internationalTradeTermsId"/>
+            <result column="international_trade_terms" property="internationalTradeTerms"/>
+            <result column="status" property="status"/>
+        </collection>
+    </resultMap>
+
+    <!-- 不采用组装方式，先查出主表信息，在根据查出来的customerId去关联查询副表的信息，虽然查询次数较多，但利于横向扩展 -->
+    <select id="selectCustomers" resultType="com.oneflow.prm.entity.dao.customer.CustomerDO">
+        select
+        pc.id,pc.customer_name,pc.customer_short_name,pc.country_id,pc.country,pc.province_id,
+        pc.province,pc.city_id,pc.city,pc.detail_address,pc.customer_phone,pc.customer_email,
+        pc.customer_contact,pc.tax_no,pc.bank_country,pc.bank_code,pc.open_bank_name,pc.bank_account,
+        pc.bank_account_name,pc.status,pc.create_by,pc.create_time,pc.update_by,pc.update_time,pc.tenant_id
+        from prm_customer pc
+        <where>
+            <if test="customerIdList != null and customerIdList.size()>0">
+                pc.id in
+                <foreach collection="customerIdList"  item="customerId" index="index" open="(" close=")" separator=",">
+                    #{customerId}
+                </foreach>
+            </if>
+        </where>
+        order by pc.id desc
+        limit #{page}, #{pageSize}
+    </select>
+
+    <select id="countList" resultType="Long">
+        select count(1)
+        from prm_customer pc
+        <where>
+            <if test="customerIdList != null and customerIdList.size()>0">
+                pc.id in
+                <foreach collection="customerIdList"  item="customerId" index="index" open="(" close=")" separator=",">
+                    #{customerId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 这种组装方式查主表join副表一条SQL就可以了，但三张表以上采用join方式查询效率就会很低，而且有新的副表时不易扩展 -->
+    <select id="selectCustomer" resultMap="Customer1">
+        select
+        pc.id,pc.customer_name,pc.customer_short_name,pc.country_id,pc.country,pc.province_id,
+        pc.province,pc.city_id,pc.city,pc.detail_address,pc.customer_phone,pc.customer_email,
+        pc.customer_contact,pc.tax_no,pc.bank_country,pc.bank_code,pc.open_bank_name,pc.bank_account,
+        pc.bank_account_name,pc.status,pc.create_by,pc.create_time,pc.update_by,pc.update_time,pc.tenant_id,
+        pr.id,pr.customer_id,pr.customer_name,pr.receiver,pr.contact_way,pr.email_address,pr.status,
+        pa.id,pa.customer_id,pa.customer_name,pa.country,pa.country_id,pa.province,pa.province_id,pa.city,pa.city_id,pa.detail_address,
+        pa.status,
+        pv.id,pv.customer_id,pv.customer_name,pv.sales_organization_id,pv.sales_organization,pv.sales_area_id,pv.sales_area,pv.nature_id,
+        pv.nature,pv.sales_type_id,pv.sales_type,pv.channel_id,pv.channel,pv.currency_id,pv.currency,pv.payment_terms_id,pv.payment_terms,
+        pv.international_trade_terms_id,pv.international_trade_terms,pv.status
+        from prm_customer pc
+        left join prm_customer_receiver pr on pr.customer_id = pc.id
+        left join prm_customer_address pa on pa.customer_id = pc.id
+        left join prm_customer_sales_view pv on pv.customer_id = pc.id
+        <where>
+            <if test="customerIds != null and customerIds.size()>0">
+                pc.id in
+                <foreach collection="customerIds"  item="customerId" index="index" open="(" close=")" separator=",">
+                    #{customerId}
+                </foreach>
+            </if>
+        </where>
+        order by pc.id desc
+        limit #{page}, #{pageSize}
+    </select>
+
+    <select id="queryReceiver" resultType="com.oneflow.prm.entity.dao.customer.ReceiverDO">
+        select id,customer_id as customerId,customer_name as customerName,receiver,contact_way as contactWay,
+               email_address as emailAddress,status,create_by as createBy,create_time as createTime,
+               update_by as updateBy,update_time as updateTime,tenant_id as tenantId
+        from prm_customer_receiver pr
+        where pr.customer_id = #{id}
+    </select>
+
+    <select id="queryAddress" resultType="com.oneflow.prm.entity.dao.customer.AddressDO">
+        select id,customer_id as customerId,customer_name as customerName,country,country_id as countryId,
+               province,province_id as provinceId,city,city_id as cityId,detail_address as detailAddress,
+               status,create_by as createBy,create_time as createTime,update_by as updateBy,
+               update_time as updateTime,tenant_id as tenantId
+        from prm_customer_address pa
+        where pa.customer_id = #{id}
+    </select>
+
+    <select id="queryCustomer" resultMap="Customer">
+        select id,customer_name,company_id,company_name,sales_organization_id,sales_organization,sales_area_id,
+        sales_area,country,country_id,salesperson,salesperson_id,customer_channel,international_trade_terms,
+        currency,payment_terms,contact,contact_phone,contact_email,bill_address,tax_no,status,create_by,
+        create_time,update_by,update_time,tenant_id
+        from prm_customer pc
+        <where>
+            <if test="custInfoReq.customerId != null and custInfoReq.customerId != ''">
+                pc.id = #{custInfoReq.customerId}
+            </if>
+            <if test="custInfoReq.salespersonId != null and custInfoReq.salespersonId != ''">
+                and pc.salesperson_id = #{custInfoReq.salespersonId}
+            </if>
+            <if test="custInfoReq.contactId != null and custInfoReq.contactId != ''">
+                and pc.id = #{custInfoReq.contactId}
+            </if>
+        </where>
+        order by pc.id desc
+        limit #{page}, #{pageSize}
+    </select>
+
+
+    <select id="findCustomerByName" resultType="java.util.Map">
+        select id,customer_name as customerName from prm_customer where customer_name like concat('%', #{name}, '%')
+    </select>
+
+    <select id="findSalesperson" resultType="java.util.Map">
+        select user_id as userId, user_name as userName from sys_user where user_name like concat('%', #{name}, '%')
+    </select>
+
+    <select id="findContact" resultType="java.util.Map">
+        select id, contact from prm_customer where contact like concat('%', #{contact}, '%')
+    </select>
+
+    <update id="modifyCustStatus1">
+        update prm_customer pc set pc.`status` = '1' where pc.id = #{id}
+    </update>
+
+    <update id="modifyCustStatus0">
+        update prm_customer pc set pc.`status` = '0' where pc.id = #{id}
+    </update>
+
+    <update id="modifyReceiverStatus1">
+        update prm_customer_receiver pr set pr.`status` = '1' where pr.customer_id = #{id}
+    </update>
+
+    <update id="modifyReceiverStatus0">
+        update prm_customer_receiver pr set pr.`status` = '0' where pr.customer_id = #{id}
+    </update>
+
+    <update id="modifyAddressStatus1">
+        update prm_customer_address pa set pa.`status` = '1' where pa.customer_id = #{id}
+    </update>
+
+    <update id="modifyAddressStatus0">
+        update prm_customer_address pa set pa.`status` = '0' where pa.customer_id = #{id}
+    </update>
+
+    <select id="selectCustAndCountry" resultType="Map">
+        select customer_name as customerName, country_id as countryId from prm_customer
+    </select>
+
+
+</mapper>

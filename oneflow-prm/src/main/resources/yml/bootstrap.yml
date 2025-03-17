@@ -1,0 +1,71 @@
+server:
+  port: 8100
+spring:
+  # 应用名称（nacos会将该名称当做服务名称）
+  application:
+    name: oneflow-prm
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+#      server-addr: localhost:8848
+      discovery:
+        server-addr: localhost:8848
+        # 下面内容有默认配置，可设可不设
+        username: nacos
+        password: nacos
+        namespace: public
+        ephemeral: false   #永久实例（true为临时实例），即使宕机了也不会删除实例，是一种熔断降级的机制
+        metadata:
+          management:
+            context-path: /oneflow/prm/actuator
+      config:
+        server-addr: localhost:8848
+        file-extension: yml   #Nacos客户端默认的是properties文件扩展名，可以通过这个配置修改
+        username: nacos
+        password: nacos
+        enabled: false    # 关闭nacos
+    #        namespace: public
+    #      shared-config[0]:
+    #        data-id: application.yml
+    sentinel:
+      # 取消控制台懒加载
+      eager: true
+      transport:
+        # 控制台地址
+        dashboard: college-sentinel:8849
+  #    main:
+  #      allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/local?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: root123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# 设置日志级别，可以将mybaits-plus的SQL语句打印出来
+logging:
+  level:
+    root: info
+    com.ecoflow: debug
+mybatis-plus:
+  configuration:
+    #mybatis-plus的驼峰映射，默认为true是打开的。false关闭后，可以使用@TableField做映射
+    map-underscore-to-camel-case: false
+  #mybatis-plus默认的mapper.xml路径地址是classpath*:/mapper/**/*.xml，如果不是需要通过以下配置设置
+  #  mapper-locations: classpath:/mapper/*.xml
+  #全局id设置自增，这样就不需要在每个类中的id加上idType注解的属性
+  global-config:
+    db-config:
+      id-type: auto
+
+# springboot的监控机制
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+
