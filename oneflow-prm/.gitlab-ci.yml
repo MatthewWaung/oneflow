@@ -1,0 +1,5 @@
+include:
+  - project: 'platform/oneflow-devops'
+    ref: master
+    file: 'template/java-pipeline.yml'
+    path:
