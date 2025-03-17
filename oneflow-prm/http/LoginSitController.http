@@ -1,0 +1,20 @@
+### 登录获取code
+POST https://sit-it-auth.ecoflow.com/ecoflow/auth/sms/login
+Content-Type: application/json
+
+{
+  "mobile": {{admin}},
+  "code": "1234",
+  "redirect_url": "https://sit-oms.ecoflow.com/login",
+  "client_id": "prm"
+}
+
+> {% client.global.set("request_code", response.body.data.code); %}
+
+### 根据code获取token
+GET https://sit-it-auth.ecoflow.com/api/sso/auth?code={{request_code}}&redirect_url=https://sit-oms.ecoflow.com/login
+Accept: */*
+
+> {% client.global.set("token", "Bearer " + response.body.token); %}
+
+

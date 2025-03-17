@@ -1,0 +1,7 @@
+### 查询客户列表
+GET {{host}}/cust/getCustomer
+Content-Type: application/json
+Accept: */*
+Authorization: {{token}}
+
+###
