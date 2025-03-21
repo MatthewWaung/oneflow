@@ -46,7 +46,7 @@ spring:
 logging:
   level:
     root: info
-    com.ecoflow: debug
+    com.oneflow: debug
 mybatis-plus:
   configuration:
     #mybatis-plus的驼峰映射，默认为true是打开的。false关闭后，可以使用@TableField做映射

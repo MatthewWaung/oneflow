@@ -23,14 +23,14 @@ RUN echo 'Asia/Shanghai' > /etc/timezone
 RUN mkdir -p /usr/share/fonts/my_fonts
 
 ARG Roman_Font="Times New Roman.ttf"
-ADD https://minio.ecoflow.com:9000/public/simsun.ttc /usr/share/fonts/my_fonts/simsun.ttc
-ADD https://minio.ecoflow.com:9000/public/arial.ttf /usr/share/fonts/my_fonts/arial.ttf
-ADD https://minio.ecoflow.com:9000/public/malgun.ttf /usr/share/fonts/my_fonts/malgun.ttf
-ADD https://minio.ecoflow.com:9000/public/MS%20Mincho.ttf ${MS_MINCHO}
-ADD https://minio.ecoflow.com:9000/public/SourceHanSerifSC-Regular.otf /usr/share/fonts/my_fonts/SourceHanSerifSC-Regular.otf
-ADD https://minio.ecoflow.com:9000/public/meiryo.ttc /usr/share/fonts/my_fonts/meiryo.ttc
-ADD https://minio.ecoflow.com:9000/public/Meiryo.ttf /usr/share/fonts/my_fonts/Meiryo.ttf
-ADD https://minio.ecoflow.com:9000/public/Times%20New%20Roman.ttf /usr/share/fonts/my_fonts/${Roman_Font}
+ADD https://minio.oneflow.com:9000/public/simsun.ttc /usr/share/fonts/my_fonts/simsun.ttc
+ADD https://minio.oneflow.com:9000/public/arial.ttf /usr/share/fonts/my_fonts/arial.ttf
+ADD https://minio.oneflow.com:9000/public/malgun.ttf /usr/share/fonts/my_fonts/malgun.ttf
+ADD https://minio.oneflow.com:9000/public/MS%20Mincho.ttf ${MS_MINCHO}
+ADD https://minio.oneflow.com:9000/public/SourceHanSerifSC-Regular.otf /usr/share/fonts/my_fonts/SourceHanSerifSC-Regular.otf
+ADD https://minio.oneflow.com:9000/public/meiryo.ttc /usr/share/fonts/my_fonts/meiryo.ttc
+ADD https://minio.oneflow.com:9000/public/Meiryo.ttf /usr/share/fonts/my_fonts/Meiryo.ttf
+ADD https://minio.oneflow.com:9000/public/Times%20New%20Roman.ttf /usr/share/fonts/my_fonts/${Roman_Font}
 
 # 定义一个环境变量 JAVA_OPTS，用于设置 JVM 的参数
 # -Xms2048m：设置 JVM 堆的初始大小为 2048MB

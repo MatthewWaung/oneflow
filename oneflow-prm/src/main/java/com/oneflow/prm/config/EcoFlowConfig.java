@@ -11,7 +11,7 @@ import java.util.List;
  * @create: 2023-09-03 15:36
  **/
 @Configuration
-public class EcoFlowConfig {
+public class oneflowConfig {
 
     // 可以从配置文件yml文件获取
     public List<String> getRoleTenantTables() {

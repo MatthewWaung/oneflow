@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(
-    name = "ecoflow-bpm-sap",
+    name = "oneflow-bpm-sap",
     contextId = "sap-common-feign"
 )
 public interface SapFeignService {

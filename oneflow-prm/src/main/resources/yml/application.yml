@@ -62,7 +62,7 @@ mybatis-plus:
 logging:
   level:
     root: info
-    com.ecoflow: debug
+    com.oneflow: debug
 
 feign:
   client:

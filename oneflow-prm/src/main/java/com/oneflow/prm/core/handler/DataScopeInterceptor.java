@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ExceptionUtils;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
-import com.oneflow.prm.config.EcoFlowConfig;
+import com.oneflow.prm.config.oneflowConfig;
 import com.oneflow.prm.core.constant.Constants;
 import com.oneflow.prm.core.exception.CustomException;
 import com.oneflow.prm.core.utils.ContextUtil;
@@ -69,7 +69,7 @@ public class DataScopeInterceptor extends AbstractSqlParserHandler implements In
     @Autowired
     HttpServletRequest request;
     @Autowired
-    private EcoFlowConfig ecoFlowConfig;
+    private oneflowConfig oneflowConfig;
     private DataSource dataSource;
 
     public DataScopeInterceptor(DataSource dataSource) {
@@ -389,7 +389,7 @@ public class DataScopeInterceptor extends AbstractSqlParserHandler implements In
         FromItem fromItem = plainSelect.getFromItem();
         if (fromItem instanceof Table) {
             Table fromTable = (Table) fromItem;
-            if (CollectionUtils.isEmpty(ecoFlowConfig.getRoleTenantTables()) || !ecoFlowConfig.getRoleTenantTables().contains(fromTable.getName())) {
+            if (CollectionUtils.isEmpty(oneflowConfig.getRoleTenantTables()) || !oneflowConfig.getRoleTenantTables().contains(fromTable.getName())) {
                 throw new CustomException(fromTable.getName() + "表已被忽略 不进行数据权限过滤");
             }
         } else {
@@ -449,7 +449,7 @@ public class DataScopeInterceptor extends AbstractSqlParserHandler implements In
     private void processJoin(Join join) throws CustomException {
         if (join.getRightItem() instanceof Table) {
             Table fromTable = (Table) join.getRightItem();
-            if (CollectionUtils.isEmpty(ecoFlowConfig.getRoleTenantTables()) || !ecoFlowConfig.getRoleTenantTables().contains(fromTable.getName())) {
+            if (CollectionUtils.isEmpty(oneflowConfig.getRoleTenantTables()) || !oneflowConfig.getRoleTenantTables().contains(fromTable.getName())) {
                 throw new CustomException(fromTable.getName() + "表已被忽略 不进行数据权限过滤");
             }
         }
