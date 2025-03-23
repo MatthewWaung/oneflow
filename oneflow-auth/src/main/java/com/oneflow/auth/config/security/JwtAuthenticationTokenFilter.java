@@ -1,8 +1,8 @@
 package com.oneflow.auth.config.security;
 
-import com.oneflow.auth.security.core.utils.StringUtils;
-import com.oneflow.auth.security.entity.LoginUser;
-import com.oneflow.auth.security.service.TokenService;
+import com.oneflow.auth.core.utils.StringUtils;
+import com.oneflow.auth.entity.LoginUser;
+import com.oneflow.auth.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

@@ -1,9 +1,8 @@
 package com.oneflow.auth.core.utils;
 
-import cn.hutool.core.util.IdUtil;
-import com.oneflow.auth.security.core.constant.Constants;
-import com.oneflow.auth.security.entity.SysRole;
-import com.oneflow.auth.security.entity.SysUser;
+import com.oneflow.auth.core.constant.Constants;
+import com.oneflow.auth.entity.SysRole;
+import com.oneflow.auth.entity.SysUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -143,7 +142,7 @@ public class TokenUtil {
 
     public static String createTempToken() {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(Constants.LOGIN_USER_KEY, IdUtil.fastUUID());
+        claims.put(Constants.LOGIN_USER_KEY, UUID.randomUUID());
         claims.put(Constants.LOGIN_USER_ID, 1L);
         claims.put(Constants.LOGIN_USER_NAME, "admin");
         claims.put(Constants.LOGIN_USER_REAL_NAME, "管理员");

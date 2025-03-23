@@ -1,10 +1,10 @@
 package com.oneflow.auth.config.security;
 
-import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.oneflow.auth.security.core.common.R;
-import com.oneflow.auth.security.core.utils.ServletUtils;
+import com.oneflow.auth.core.common.R;
+import com.oneflow.auth.core.utils.ServletUtils;
+import com.oneflow.auth.core.utils.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint, S
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-        int code = HttpStatus.HTTP_UNAUTHORIZED;
+        int code = HttpStatus.UNAUTHORIZED.value(); // 使用 Spring 的 HttpStatus 替代
         String msg = StringUtils.format("请求访问：{}，认证失败，无法访问系统资源", request.getRequestURI());
         ServletUtils.renderString(response, JSON.toJSONString(R.fail(code, msg)));
     }

@@ -1,8 +1,8 @@
 package com.oneflow.auth.controller;
 
-import com.oneflow.auth.security.core.common.R;
-import com.oneflow.auth.security.entity.User;
-import com.oneflow.auth.security.service.LoginService;
+import com.oneflow.auth.core.common.R;
+import com.oneflow.auth.entity.User;
+import com.oneflow.auth.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

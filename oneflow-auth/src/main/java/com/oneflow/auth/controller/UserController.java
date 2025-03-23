@@ -1,6 +1,6 @@
 package com.oneflow.auth.controller;
 
-import com.oneflow.auth.security.entity.SysUser;
+import com.oneflow.auth.entity.SysUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

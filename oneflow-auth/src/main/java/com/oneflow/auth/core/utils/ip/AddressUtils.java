@@ -1,9 +1,9 @@
 package com.oneflow.auth.core.utils.ip;
 
 import com.alibaba.fastjson.JSONObject;
-import com.oneflow.auth.security.core.constant.Constants;
-import com.oneflow.auth.security.core.utils.StringUtils;
-import com.oneflow.auth.security.core.utils.http.HttpUtils;
+import com.oneflow.auth.core.constant.Constants;
+import com.oneflow.auth.core.utils.StringUtils;
+import com.oneflow.auth.core.utils.http.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

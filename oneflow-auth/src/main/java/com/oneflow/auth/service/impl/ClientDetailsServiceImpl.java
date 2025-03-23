@@ -2,6 +2,9 @@ package com.oneflow.auth.service.impl;
 
 import com.oneflow.auth.service.ClientDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientRegistrationException;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

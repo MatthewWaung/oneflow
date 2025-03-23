@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.oneflow.auth.security.entity.LoginUser;
+import com.oneflow.auth.entity.LoginUser;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class JwtOauth0Util {
      */
     public static boolean verifyToken(String token) {
         try{
-            DecodedJWT jwt=JWT.require(Algorithm.HMAC256(SECRET)).build().verify(token);
+            DecodedJWT jwt = JWT.require(Algorithm.HMAC256(SECRET)).build().verify(token);
         }catch (Exception e){
             return false;
         }
@@ -59,7 +59,7 @@ public class JwtOauth0Util {
      *  解析token
      * @return
      */
-    public static DecodedJWT getIdToken(String token) throws JWTDecodeException{
+    public static DecodedJWT getIdToken(String token) throws JWTDecodeException {
           return JWT.decode(token);
     }
 }

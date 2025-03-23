@@ -1,7 +1,7 @@
 package com.oneflow.auth.core.utils;
 
-import com.oneflow.auth.security.core.exception.CustomException;
-import com.oneflow.auth.security.entity.LoginUser;
+import com.oneflow.auth.core.exception.CustomException;
+import com.oneflow.auth.entity.LoginUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

@@ -5,6 +5,7 @@ import com.oneflow.auth.core.utils.StringUtils;
 import com.oneflow.auth.entity.LoginUser;
 import com.oneflow.auth.entity.SysUser;
 import com.oneflow.auth.service.ISysUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

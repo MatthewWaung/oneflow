@@ -1,7 +1,7 @@
 package com.oneflow.auth.service;
 
-import com.oneflow.auth.security.core.common.R;
-import com.oneflow.auth.security.entity.User;
+import com.oneflow.auth.core.common.R;
+import com.oneflow.auth.entity.User;
 
 public interface LoginService {
 

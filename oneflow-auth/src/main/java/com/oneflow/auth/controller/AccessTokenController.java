@@ -1,14 +1,14 @@
 package com.oneflow.auth.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.oneflow.auth.security.core.common.R;
-import com.oneflow.auth.security.core.exception.CustomException;
-import com.oneflow.auth.security.core.utils.StringUtils;
-import com.oneflow.auth.security.core.utils.redis.RedisUtils;
-import com.oneflow.auth.security.entity.LoginUser;
-import com.oneflow.auth.security.entity.SsoAuthVO;
-import com.oneflow.auth.security.mapper.Oauth2ClientMapper;
+import com.oneflow.auth.core.common.R;
+import com.oneflow.auth.core.exception.CustomException;
+import com.oneflow.auth.core.utils.StringUtils;
+import com.oneflow.auth.core.utils.redis.RedisUtils;
+import com.oneflow.auth.entity.LoginUser;
+import com.oneflow.auth.entity.SsoAuthVO;
+import com.oneflow.auth.mapper.Oauth2ClientMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

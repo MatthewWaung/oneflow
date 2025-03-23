@@ -1,6 +1,6 @@
 package com.oneflow.auth.mapper;
 
-import com.oneflow.auth.security.entity.SysUser;
+import com.oneflow.auth.entity.SysUser;
 import org.springframework.stereotype.Repository;
 
 @Repository

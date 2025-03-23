@@ -1,7 +1,7 @@
 package com.oneflow.auth.core.utils.http;
 
-import com.oneflow.auth.security.core.constant.Constants;
-import com.oneflow.auth.security.core.utils.StringUtils;
+import com.oneflow.auth.core.constant.Constants;
+import com.oneflow.auth.core.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

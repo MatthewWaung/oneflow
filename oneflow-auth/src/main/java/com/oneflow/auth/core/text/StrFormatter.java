@@ -1,7 +1,7 @@
 package com.oneflow.auth.core.text;
 
 
-import com.oneflow.auth.security.core.utils.StringUtils;
+import com.oneflow.auth.core.utils.StringUtils;
 
 /**
  * 字符串格式化

@@ -1,7 +1,7 @@
 package com.oneflow.auth.core.utils.html;
 
 
-import com.oneflow.auth.security.core.utils.StringUtils;
+import com.oneflow.auth.core.utils.StringUtils;
 
 /**
  * 转义和反转义工具类

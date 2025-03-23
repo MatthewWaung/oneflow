@@ -1,8 +1,8 @@
 package com.oneflow.auth.config.security;
 
 import com.alibaba.fastjson.JSON;
-import com.oneflow.auth.security.core.common.R;
-import com.oneflow.auth.security.core.utils.ServletUtils;
+import com.oneflow.auth.core.common.R;
+import com.oneflow.auth.core.utils.ServletUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

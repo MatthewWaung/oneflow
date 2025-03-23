@@ -14,10 +14,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+
+    <!--
+        Spring Security 本身并没有在 Spring Boot 2.4+ 后被弃用。Spring Security 是一个广泛使用的安全框架，
+        用于保护基于 Java 的企业应用。然而，Spring Security OAuth2 的某些部分确实在 Spring Boot 2.4 及更高版本中发生了变化。
+        具体来说，@EnableAuthorizationServer 注解和相关的 spring-security-oauth2 库在 Spring Boot 2.4 及更高版本中已被弃用，
+        并且不再维护。取而代之的是 Spring Authorization Server，这是一个新的项目，旨在提供更现代和灵活的 OAuth 2.0 和 OpenID Connect 1.0 实现。
+
+
+        所以为了使用原来的Oauth2，这里将SpringBoot版本降到2.4以下
+    -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.12</version>
+<!--        <version>2.6.12</version>-->
+        <version>2.2.6.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -33,7 +44,9 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- Spring Security OAuth2 -->
+        <!-- Spring Security OAuth2
+                Spring Boot 2.4 及更高版本中已被弃用，转移到了 Spring Authorization Server 项目中。
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
@@ -44,11 +57,68 @@
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
 
+        <!-- SpringBoot Redis-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.5.2.RELEASE</version>
+        </dependency>
+
+
+        <!--
+        @EnableAuthorizationServer 注解在 Spring Boot 2.4 及更高版本中已被弃用，并且在 Spring Security OAuth2 项目中不再维护。
+        Spring Security OAuth2 的支持已经转移到了 Spring Authorization Server 项目中。
+        -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-authorization-server</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>3.0.1</version>
+            <version>2.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.2.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.71</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
         </dependency>
 
     </dependencies>

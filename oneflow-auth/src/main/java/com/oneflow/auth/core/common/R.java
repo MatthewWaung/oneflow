@@ -1,6 +1,6 @@
 package com.oneflow.auth.core.common;
 
-import com.oneflow.auth.security.core.constant.Constants;
+import com.oneflow.auth.core.constant.Constants;
 
 import java.io.Serializable;
 

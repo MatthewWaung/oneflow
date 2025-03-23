@@ -1,9 +1,9 @@
 package com.oneflow.auth.controller;
 
-import com.oneflow.auth.security.core.exception.CustomException;
-import com.oneflow.auth.security.core.utils.StringUtils;
-import com.oneflow.auth.security.core.utils.redis.RedisUtils;
-import com.oneflow.auth.security.entity.SsoAuthVO;
+import com.oneflow.auth.core.exception.CustomException;
+import com.oneflow.auth.core.utils.StringUtils;
+import com.oneflow.auth.core.utils.redis.RedisUtils;
+import com.oneflow.auth.entity.SsoAuthVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

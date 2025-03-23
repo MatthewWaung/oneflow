@@ -1,6 +1,6 @@
 package com.oneflow.auth.service;
 
-import com.oneflow.auth.security.entity.SysUser;
+import com.oneflow.auth.entity.SysUser;
 
 public interface ISysUserService {
 

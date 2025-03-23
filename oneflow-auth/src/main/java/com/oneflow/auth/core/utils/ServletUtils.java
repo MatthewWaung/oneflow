@@ -1,6 +1,6 @@
 package com.oneflow.auth.core.utils;
 
-import com.oneflow.auth.security.core.text.Convert;
+import com.oneflow.auth.core.text.Convert;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

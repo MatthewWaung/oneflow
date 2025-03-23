@@ -1,11 +1,11 @@
 package com.oneflow.auth.config.security;
 
 import com.alibaba.fastjson.JSON;
-import com.oneflow.auth.security.core.common.R;
-import com.oneflow.auth.security.core.utils.ServletUtils;
-import com.oneflow.auth.security.core.utils.StringUtils;
-import com.oneflow.auth.security.entity.LoginUser;
-import com.oneflow.auth.security.service.TokenService;
+import com.oneflow.auth.core.common.R;
+import com.oneflow.auth.core.utils.ServletUtils;
+import com.oneflow.auth.core.utils.StringUtils;
+import com.oneflow.auth.entity.LoginUser;
+import com.oneflow.auth.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;

@@ -1,8 +1,8 @@
 package com.oneflow.auth.config;
 
-import com.oneflow.auth.security.config.security.AuthenticationEntryPointImpl;
-import com.oneflow.auth.security.config.security.JwtAuthenticationTokenFilter;
-import com.oneflow.auth.security.config.security.LogoutSuccessHandlerImpl;
+import com.oneflow.auth.config.security.AuthenticationEntryPointImpl;
+import com.oneflow.auth.config.security.JwtAuthenticationTokenFilter;
+import com.oneflow.auth.config.security.LogoutSuccessHandlerImpl;
 import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

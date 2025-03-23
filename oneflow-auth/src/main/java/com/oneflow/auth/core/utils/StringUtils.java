@@ -1,7 +1,7 @@
 package com.oneflow.auth.core.utils;
 
-import com.oneflow.auth.security.core.constant.Constants;
-import com.oneflow.auth.security.core.text.StrFormatter;
+import com.oneflow.auth.core.constant.Constants;
+import com.oneflow.auth.core.text.StrFormatter;
 import org.springframework.util.AntPathMatcher;
 
 import java.util.*;

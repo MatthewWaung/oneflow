@@ -1,14 +1,13 @@
 package com.oneflow.auth.service;
 
-import com.oneflow.auth.security.core.constant.Constants;
-import com.oneflow.auth.security.core.utils.ServletUtils;
-import com.oneflow.auth.security.core.utils.StringUtils;
-import com.oneflow.auth.security.core.utils.ip.AddressUtils;
-import com.oneflow.auth.security.core.utils.ip.IpUtils;
-import com.oneflow.auth.security.core.utils.redis.RedisUtils;
-import com.oneflow.auth.security.core.utils.uuid.IdUtils;
-import com.oneflow.auth.security.entity.LoginUser;
-import eu.bitwalker.useragentutils.UserAgent;
+import com.oneflow.auth.core.constant.Constants;
+import com.oneflow.auth.core.utils.ServletUtils;
+import com.oneflow.auth.core.utils.StringUtils;
+import com.oneflow.auth.core.utils.ip.AddressUtils;
+import com.oneflow.auth.core.utils.ip.IpUtils;
+import com.oneflow.auth.core.utils.redis.RedisUtils;
+import com.oneflow.auth.core.utils.uuid.IdUtils;
+import com.oneflow.auth.entity.LoginUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -95,7 +94,7 @@ public class TokenService {
     public String createToken(LoginUser loginUser) {
         String token = IdUtils.fastUUID();
         loginUser.setToken(token);
-        setUserAgent(loginUser);
+//        setUserAgent(loginUser);
         refreshToken(loginUser);
 
         Map<String, Object> claims = new HashMap<>();
@@ -135,14 +134,14 @@ public class TokenService {
      *
      * @param loginUser 登录信息
      */
-    public void setUserAgent(LoginUser loginUser) {
-        UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
-        String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
-        loginUser.setIpaddr(ip);
-        loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
-        loginUser.setBrowser(userAgent.getBrowser().getName());
-        loginUser.setOs(userAgent.getOperatingSystem().getName());
-    }
+//    public void setUserAgent(LoginUser loginUser) {
+//        UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
+//        String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
+//        loginUser.setIpaddr(ip);
+//        loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
+//        loginUser.setBrowser(userAgent.getBrowser().getName());
+//        loginUser.setOs(userAgent.getOperatingSystem().getName());
+//    }
 
     /**
      * 从数据声明生成令牌

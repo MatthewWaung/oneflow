@@ -1,7 +1,7 @@
 package com.oneflow.auth.core.text;
 
 
-import com.oneflow.auth.security.core.utils.StringUtils;
+import com.oneflow.auth.core.utils.StringUtils;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

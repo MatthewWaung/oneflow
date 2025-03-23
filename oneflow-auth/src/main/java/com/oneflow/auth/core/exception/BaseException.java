@@ -1,8 +1,8 @@
 package com.oneflow.auth.core.exception;
 
 
-import com.oneflow.auth.security.core.enums.ExceptionEnums;
-import com.oneflow.auth.security.core.enums.ModuleEnums;
+import com.oneflow.auth.core.enums.ExceptionEnums;
+import com.oneflow.auth.core.enums.ModuleEnums;
 
 /**
  * 基础异常

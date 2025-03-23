@@ -1,7 +1,7 @@
 package com.oneflow.auth.core.utils.ip;
 
-import com.oneflow.auth.security.core.utils.StringUtils;
-import com.oneflow.auth.security.core.utils.html.EscapeUtil;
+import com.oneflow.auth.core.utils.StringUtils;
+import com.oneflow.auth.core.utils.html.EscapeUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
