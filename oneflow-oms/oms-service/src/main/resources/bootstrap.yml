@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: oneflow-oms
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        metadata:
+          management:
+            context-path: /oneflow/amqp/actuator
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+        shared-configs[0]:
+          data-id: application.yml
+  main:
+    allow-bean-definition-overriding: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoint:
+    logfile:
+      external-file: ./logs/oneflow-oms/oneflow-oms.log

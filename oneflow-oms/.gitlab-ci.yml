@@ -1,0 +1,46 @@
+include:
+  - project: 'platform/ecoflow-cidevops'
+    ref: master
+    file: 'templates/java-pipeline.yml'
+
+
+variables:
+  CACHE_DIR: "oms-service/target/"
+  APP_NAME: "ecoflow-oms"
+  ARTIFACTS_DIR: "oms-service/target/*.jar"               # 上传制品名称
+  BUILD_SHELL: 'mvn clean package -DskipTests'
+  RUN_DEPLOY_K8S: 'no'                #是否发布K8S yes/no
+  RUN_PIPELINE_TEST: "no"             #是否运行测试 yes/no
+  UPGRADE_IMAGE_K8S: "yes"            #是否更新K8S镜像 yes/no
+  RUN_PUBLIC_DOC: "no"                                      # 是否发布api文档 yes/no
+  DEPLOY_FILE: "deployment.yaml"
+  FEI_SHU_ROBOT_NOTICE: 'yes'         #是否开启飞书机器人发布通知 yes/no
+  ROBOT_KEY: '91f683df-6c2c-42c5-b6b3-27a4a51107f1' #飞书机器人key
+
+
+## 使用kubectl镜像发布
+upgrade_k8s_image_sit_oms_job:
+  extends: upgrade_k8s_image_sit
+  script:
+    - if [[ "$CI_COMMIT_REF_NAME" == "sit" ]]; then
+      export APP_NAME_TEMP=${APP_NAME}-job;
+      sudo sshpass -p ef@2022 ssh appuser@10.10.11.240 "/home/appuser/deploy.sh ${NAMESPACE} ${APP_NAME_TEMP} ${IMAGE_NAME}";
+      fi
+
+## 使用kubectl镜像发布
+upgrade_k8s_image_dev_oms_job:
+  extends: upgrade_k8s_image_dev
+  script:
+    - if [[ "$CI_COMMIT_REF_NAME" == "dev" ]]; then
+      export APP_NAME_TEMP=${APP_NAME}-job;
+      sudo sshpass -p ef@2022 ssh appuser@10.10.11.240 "/home/appuser/deploy.sh ${NAMESPACE} ${APP_NAME_TEMP} ${IMAGE_NAME}";
+      fi
+
+## 使用kubectl镜像发布
+upgrade_k8s_image_release_oms_job:
+  extends: upgrade_k8s_image_release
+  script:
+    - if [[ "$CI_COMMIT_REF_NAME" == "master" ]]; then
+      export APP_NAME_TEMP=${APP_NAME}-job;
+      sudo sshpass -p ef@2022 ssh appuser@10.10.11.240 "/home/appuser/deploy.sh ${NAMESPACE} ${APP_NAME_TEMP} ${IMAGE_NAME}";
+      fi
