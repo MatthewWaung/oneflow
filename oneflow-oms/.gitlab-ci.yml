@@ -1,12 +1,13 @@
+# 这里的cicd配置从模板中继承，模板来自plaform的oneflow-cidevops工程
 include:
-  - project: 'platform/ecoflow-cidevops'
+  - project: 'platform/oneflow-cidevops'
     ref: master
     file: 'templates/java-pipeline.yml'
 
 
 variables:
   CACHE_DIR: "oms-service/target/"
-  APP_NAME: "ecoflow-oms"
+  APP_NAME: "oneflow-oms"
   ARTIFACTS_DIR: "oms-service/target/*.jar"               # 上传制品名称
   BUILD_SHELL: 'mvn clean package -DskipTests'
   RUN_DEPLOY_K8S: 'no'                #是否发布K8S yes/no
