@@ -72,11 +72,11 @@
 
 
         <!-- 自定义脚手架里的公共工具类依赖，来自oneflow-boot工程 -->
-        <dependency>
-            <groupId>com.oneflow</groupId>
-            <artifactId>oneflow-comm</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.oneflow</groupId>-->
+<!--            <artifactId>oneflow-comm</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
 
 
     </dependencies>
