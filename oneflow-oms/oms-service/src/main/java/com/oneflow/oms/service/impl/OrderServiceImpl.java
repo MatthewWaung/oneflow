@@ -5,6 +5,7 @@ import com.oneflow.oms.entity.order.OrderDO;
 import com.oneflow.oms.mapper.OrderMapper;
 import com.oneflow.oms.service.IOrderService;
 import com.oneflow.oms.vo.request.order.OrderListReq;
+import com.oneflow.oms.vo.request.order.OrderModifyReq;
 import com.oneflow.oms.vo.response.order.OrderListRes;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderDO> implemen
         return Collections.emptyList();
     }
 
+    @Override
+    public void modifyOrder(OrderModifyReq req) {
 
+    }
+
+    @Override
+    public OrderDO getOrderDOById(Long id) {
+        OrderDO orderDO = getById(id);
+        return orderDO;
+    }
 }
