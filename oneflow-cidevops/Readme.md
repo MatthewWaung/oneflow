@@ -11,5 +11,5 @@ https://jihulab.com/gitlab-cn/gitlab/-/tree/master/lib/gitlab/ci/templates
 jobs目录用于存放作业模板。templates目录用于存放流水线模板。这次使用default-pipeline.yml作为所有作业的基础模板。【https://blog.csdn.net/Coder_Boy_/article/details/131880719】
 
 **======【本工程ci模板参考自github上分享的工程：】======** 
-https://github.com/cidevopsci/cidevops-newci-service.git
+https://github.com/cidevopsci/cidevops-newci-service
 
