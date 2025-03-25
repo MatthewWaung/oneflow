@@ -1,5 +1,8 @@
 package com.oneflow.prm.core.constant;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * 通用信息常量
  */
@@ -85,5 +88,17 @@ public class Constants {
      * 仅本人数据权限
      */
     public static final String DATA_SCOPE_SELF = "5";
+
+    /**
+     * 标记 1-是，0-否
+     */
+    @AllArgsConstructor
+    @Getter
+    public enum YesOrNoFlag {
+        Y(1, "是"),
+        N(0, "否");
+        private final Integer code;
+        private final String desc;
+    }
 
 }

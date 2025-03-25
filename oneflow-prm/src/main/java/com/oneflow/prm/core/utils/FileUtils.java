@@ -3,6 +3,8 @@ package com.oneflow.prm.core.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.URL;
@@ -146,5 +148,48 @@ public class FileUtils {
         }
     }
 
+
+    /**
+     * 创建临时文件
+     *
+     * @param fileName       临时文件的名称
+     * @param prefix         临时文件的前缀
+     * @param deleteOnExit   是否在 JVM 退出时删除临时文件
+     * @return 创建的临时文件
+     */
+    public static File createTempFile(String fileName, String prefix, boolean deleteOnExit) {
+        try {
+            // 创建临时文件
+            File tempFile = File.createTempFile(prefix, fileName);
+            if (deleteOnExit) {
+                tempFile.deleteOnExit();
+            }
+            return tempFile;
+        } catch (IOException e) {
+            logger.error("Failed to create temporary file.", e);
+            return null;
+        }
+    }
+
+    /**
+     * 将 File 对象转换为 MultipartFile 对象
+     *
+     * @param tempFile 要转换的 File 对象
+     * @return 转换后的 MultipartFile 对象
+     */
+    public static MultipartFile fileToMultipartFile(File tempFile) {
+        try {
+            if (tempFile == null || !tempFile.exists()) {
+                logger.error("File does not exist.");
+                return null;
+            }
+            FileInputStream fileInputStream = new FileInputStream(tempFile);
+            return new MockMultipartFile(tempFile.getName(), tempFile.getName(),
+                    "application/octet-stream", fileInputStream);
+        } catch (IOException e) {
+            logger.error("Failed to convert File to MultipartFile.", e);
+            return null;
+        }
+    }
 
 }

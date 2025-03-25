@@ -34,7 +34,11 @@ public enum ExceptionEnums {
 
 
     /********************************3.系统管理*****************************************/
-    PARAMETERS_EMPTY_EXCEPTION("900001", "参数为空异常");
+    PARAMETERS_EMPTY_EXCEPTION("900001", "参数为空异常"),
+    EXCEL_PARSE_FAILED("900002", "excel解析失败"),
+    EXPORT_EXCEL_ERROR("900003", "导出excel失败"),
+
+    ;
 
     private final String code;
 
