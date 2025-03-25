@@ -1,0 +1,24 @@
+# 发布镜像完成通知
+.deploy_notice:
+  stage: deploy_notice
+  script:
+    - ls
+    - /home/gitlab-runner/push_notice.sh $CI_BUILD_REF_NAME $CI_PROJECT_ID cli_a34caeb0497ed00b isn1ocwBDZur8qUykuT4ohaa6A7uEtFu $CI_PROJECT_NAME "你刚提交的代码，镜像已经构建完成，如需手动发布，可以进行发布了！"
+  rules:
+    - if: " $RUN_ROT_NOTICE == 'no' "
+      when: never
+    - when: always
+  allow_failure: true
+
+# 飞书机器人通知
+.deploy_notice_feishu:
+  stage: deploy_notice_feishu
+  script:
+    - COMMIT_MESSAGE=$(git log --name-status  --pretty=oneline --abbrev-commit ${CI_COMMIT_BEFORE_SHA}..${CI_COMMIT_SHA} | tr '\t' ' '| sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g')
+    - echo $COMMIT_MESSAGE
+    - 'curl -X POST -H "Content-Type: application/json" -d "{\"msg_type\":\"interactive\",\"card\":{\"elements\":[{\"tag\":\"div\",\"text\":{\"content\":\" ** 🌟 项目名称：** $CI_PROJECT_NAME \\n **🎉 项目构建结果：** 成功\\n **📲 构建分支：** $CI_COMMIT_BRANCH \\n **👨‍💻 构建人：**$GITLAB_USER_NAME \\n **📬 流水线地址：** [$CI_PIPELINE_URL]($CI_PIPELINE_URL) \\n **📝更新日志：** \n $COMMIT_MESSAGE \\n\",\"tag\":\"lark_md\"}}],\"header\":{\"template\":\"turquoise\",\"title\":{\"content\":\"📢 版本更新通知\",\"tag\":\"plain_text\"}}}}" https://open.feishu.cn/open-apis/bot/v2/hook/${ROBOT_KEY}'
+  rules:
+    - if: " $FEI_SHU_ROBOT_NOTICE == 'yes' "
+      when: always
+    - when: never
+  allow_failure: true
