@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecoflow-oms
+  namespace: it-project
+  labels:
+    app: ecoflow-oms
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ecoflow-oms
+  template:
+    metadata:
+      labels:
+        app: ecoflow-oms
+    spec:
+      containers:
+        - name: ecoflow-oms
+          image: harbor.ecoflow.com/it/ecoflow-oms:master
+          imagePullPolicy: Always
+          command: ["java", "-jar", "/app.jar"]
+          args:
+            - '--spring.profiles.active=prd'
+            - '--spring.cloud.nacos.config.namespace=ecoflow-k8s'
+            - '--spring.cloud.nacos.config.server-addr=nacos-headless'
+            - '--spring.cloud.nacos.discovery.namespace=ecoflow-k8s'
+            - '--spring.cloud.nacos.discovery.server-addr=nacos-headless'
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+            - mountPath: /logs
+              name: log-volume
+          resources:
+            limits:
+              cpu: "2"
+              memory: 1500Mi
+            requests:
+              cpu: "2"
+              memory: 1500Mi
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8888
+            initialDelaySeconds: 30
+      volumes:
+        - name: log-volume
+          hostPath:
+            path: /data
+            type: Directory
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecoflow-oms
+  namespace: it-project
+  labels:
+    app: ecoflow-oms
+spec:
+  selector:
+    app: ecoflow-oms
+  ports:
+    - port: 8888
+      targetPort: 8888
+
