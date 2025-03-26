@@ -1,0 +1,232 @@
+include:
+  - project: 'platform/ecoflow-cidevops'
+    ref: master
+    file: 'jobs/build.yml'
+  - project: 'platform/ecoflow-cidevops'
+    ref: master
+    file: 'jobs/test.yml'
+  - project: 'platform/ecoflow-cidevops'
+    ref: master
+    file: 'jobs/codeanalysis.yml'
+  - project: 'platform/ecoflow-cidevops'
+    ref: master
+    file: 'jobs/deploy.yml'
+  - project: 'platform/ecoflow-cidevops'
+    ref: master
+    file: 'jobs/notice.yml'
+  - project: 'platform/ecoflow-cidevops'
+    ref: master
+    file: 'jobs/api-docs.yml'
+variables:
+  ## 全局配置
+  GIT_CHECKOUT: "false"
+  CACHE_DIR: ""
+
+  ## 作业控制
+  RUN_PIPELINE_BUILD: ""     #是否运行构建 yes/no
+  RUN_PIPELINE_TEST: ""      #是否运行测试 yes/no
+  RUN_CODE_ANALYSIS: ""      #是否代码扫描 yes/no
+  RUN_BUILD_IMAGE: ""        #是否生成镜像 yes/no
+  RUN_DEPLOY_ARTIFACTS: ""   #是否上传制品 yes/no
+  RUN_DEPLOY_K8S: ""         #是否发布K8S yes/no
+  UPGRADE_IMAGE_K8S: ""      #是否更新K8S镜像 yes/no
+  RUN_ROT_NOTICE: ""         #是否通知 yes/no、
+  FEI_SHU_ROBOT_NOTICE: ""      #是否飞书机器通知 yes/no
+
+  ## 构建测试参数
+  MAVEN_OPTS: ""                #maven构建参数
+  GRADLE_OPTS: ""               #gradle构建参数
+  BUILD_SHELL: ''               #构建命令
+
+  ## 单元测试参数
+  TEST_SHELL : 'mvn test  '       #测试命令
+  JUNIT_REPORT_PATH: 'target/surefire-reports/TEST-*.xml'   #单元测试报告
+
+  ## 代码扫描 需要在gitrunner服务器配置sonar-scanner
+  SONAR_SOURCE_DIR : "src"                                          #项目源码目录
+  SONAR_SERVER_URL: "http://sonarqube.10.10.11.240.nip.io:31578/"   #SonarQube服务器信息
+  SONAR_SERVER_LOGIN: "sqp_53add6887bcedaa58ffde55adc2f3dc4b41d2f31"    #Sonar Token最好在项目中定义。
+  SONAR_SCAN_ARGS: "-Dsonar.sources=${SONAR_SOURCE_DIR}"            #项目扫描参数
+
+  ## 构建镜像
+  CI_REGISTRY: 'harbor.ecoflow.com/it'
+  IMAGE_NAME: "${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHORT_SHA}"     #镜像名称
+  IMAGE_NAME_LATEST: "${CI_REGISTRY}/${CI_PROJECT_PATH}:latest"                     #镜像名称
+  DOCKER_FILE_PATH: "./Dockerfile"                                                                 #Dockerfile位置
+
+  ## 部署应用k8s
+  APP_NAME: "$CI_PROJECT_NAME"                                                  #应用名称 <--> deploymentName
+  CONTAINER_PORT: "8081"                                                        #服务端口 <--> servicesPort
+  NAMESPACE: ""                                                                 #名称空间
+  NODE_IP_PORT: ""                                                              # 节点IP +端口
+  ENV_URL: "${NAMESPACE}.${CI_PROJECT_NAME}.${NODE_IP_PORT}"  #IngressHosts
+  DEPLOY_IMAGE: "harbor.ecoflow.com/idc-devops/kubectl-idc-bpit-test:bpit-release"  #打包docker 镜像
+  DEPLOY_FILE: "deployment.yaml"
+
+
+## 流水线控制
+workflow:
+  rules:
+    #- if: "$CI_PIPELINE_SOURCE == 'web'"    #允许在web页面发布
+    #- if: "$CI_COMMIT_BEFORE_SHA == '0000000000000000000000000000000000000000'"     #过滤分支创建请求
+    #  when: never
+    ### 默认策略
+    #- when: always
+    - if: $CI_COMMIT_REF_NAME == "release" || $CI_COMMIT_REF_NAME == "master" || $CI_COMMIT_REF_NAME == "dev" || $CI_COMMIT_REF_NAME == "sit"
+
+
+## 运行阶段
+stages:
+  - build
+  - test
+  - build_image
+  - deploy_notice
+  - deploy_k8s
+  - upgrade_k8s_image
+  - deploy_doc
+  - deploy_notice_feishu
+  - rollout_k8s
+
+cache:
+  paths:
+    - ${CACHE_DIR}
+
+before_script:
+  - export
+
+
+################# Jobs Configure #####################
+
+## 构建作业
+build:
+  extends: .build
+
+## 测试作业
+test:
+  extends: .test
+  before_script:
+    - ls
+    - ls ${CACHE_DIR}
+
+
+## 构建镜像
+build_image:
+  extends: .build-docker
+  before_script:
+    - ls
+    - ls ${CACHE_DIR}
+
+
+#################Deploy UAT Jobs Configure #####################
+
+
+# 镜像构建完成发送通知
+deploy_notice:
+  stage: deploy_notice
+  extends: .deploy_notice
+
+# 飞书机器人发布通知
+deploy_notice_feishu:
+  extends: .deploy_notice_feishu
+
+# 发布文档
+deploy_docs:
+  extends: .api_doc
+
+# 发布根据不同环境设置变量
+# release
+deploy_k8s_release:
+  stage: deploy_k8s
+  extends: .deploy_k8s
+  variables:
+    NAMESPACE: "bpit-release"
+    NODE_IP_PORT: "10.10.11.241.nip.io"
+    DEPLOY_IMAGE: "harbor.ecoflow.com/idc-devops/kubectl-idc-bpit-test:bpit-release"
+  rules:
+    - if: " $RUN_DEPLOY_K8S == 'no'"
+      when: never
+    - if: $CI_COMMIT_REF_NAME =~ /^release*/
+      when: manual
+    - when: never
+
+# dev
+deploy_k8s_dev:
+  stage: deploy_k8s
+  extends: .deploy_k8s
+  variables:
+    NAMESPACE: "bpit-dev"
+    NODE_IP_PORT: "10.10.11.241.nip.io"
+    DEPLOY_IMAGE: "harbor.ecoflow.com/idc-devops/kubectl-idc-bpit-test:bpit-dev"
+  rules:
+    - if: " $RUN_DEPLOY_K8S == 'no'"
+      when: never
+    - if: $CI_COMMIT_REF_NAME =~ /^dev*/
+      when: always
+    - when: never
+
+# sit
+deploy_k8s_sit:
+  stage: deploy_k8s
+  extends: .deploy_k8s
+  variables:
+    NAMESPACE: "bpit-sit"
+    NODE_IP_PORT: "10.10.11.241.nip.io"
+    DEPLOY_IMAGE: "harbor.ecoflow.com/idc-devops/kubectl-idc-bpit-test:bpit-sit"
+  rules:
+    - if: " $RUN_DEPLOY_K8S == 'no'"
+      when: never
+    - if: $CI_COMMIT_REF_NAME =~ /^sit*/
+      when: manual
+    - when: never
+
+## 更新镜像
+
+# release
+upgrade_k8s_image_release:
+  stage: upgrade_k8s_image
+  extends: .upgrade_k8s_image
+  variables:
+    NAMESPACE: "bpit-release"
+    NODE_IP_PORT: "10.10.11.241.nip.io"
+    DEPLOY_IMAGE: "harbor.ecoflow.com/idc-devops/kubectl-idc-bpit-test:bpit-release"
+  rules:
+    - if: " $UPGRADE_IMAGE_K8S == 'no'"
+      when: never
+    - if: $CI_COMMIT_REF_NAME =~ /^master*/ || $CI_COMMIT_REF_NAME =~ /^release*/
+      when: always
+    - when: never
+
+# dev
+upgrade_k8s_image_dev:
+  stage: upgrade_k8s_image
+  extends: .upgrade_k8s_image
+  variables:
+    NAMESPACE: "bpit-dev"
+    NODE_IP_PORT: "10.10.11.241.nip.io"
+    DEPLOY_IMAGE: "harbor.ecoflow.com/idc-devops/kubectl-idc-bpit-test:bpit-dev"
+  rules:
+    - if: " $UPGRADE_IMAGE_K8S == 'no'"
+      when: never
+    - if: $CI_COMMIT_REF_NAME =~ /^dev*/
+      when: always
+    - when: never
+
+# sit
+upgrade_k8s_image_sit:
+  stage: upgrade_k8s_image
+  extends: .upgrade_k8s_image
+  variables:
+    NAMESPACE: "bpit-sit"
+    NODE_IP_PORT: "10.10.11.241.nip.io"
+    DEPLOY_IMAGE: "harbor.ecoflow.com/idc-devops/kubectl-idc-bpit-test:bpit-sit"
+  rules:
+    - if: " $UPGRADE_IMAGE_K8S == 'no'"
+      when: never
+    - if: $CI_COMMIT_REF_NAME =~ /^sit*/
+      when: manual
+    - when: never
+
+## 应用回滚
+rollout_k8s:
+  extends: .rollout_k8s
+

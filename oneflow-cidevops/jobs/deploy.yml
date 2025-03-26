@@ -1,0 +1,57 @@
+## 应用发布
+
+
+## 使用kubectl镜像发布
+.deploy_k8s:
+  stage: deploy_k8s
+  script:
+    - ls -a
+    - sed -i "s#__namespace__#${NAMESPACE}#g" ${DEPLOY_FILE}
+    - sed -i "s#__appname__#${APP_NAME}#g" ${DEPLOY_FILE}
+    - sed -i "s#__containerport__#${CONTAINER_PORT}#g" ${DEPLOY_FILE}
+    - sed -i "s#__nodeport__#${NODE_PORT}#g" ${DEPLOY_FILE}
+    - sed -i "s#__imagename__#${IMAGE_NAME}#g" ${DEPLOY_FILE}
+    - sed -i "s#__CI_ENVIRONMENT_SLUG__#${NAMESPACE}#g" ${DEPLOY_FILE}
+    - sed -i "s#__CI_PROJECT_PATH_SLUG__#${CI_PROJECT_PATH_SLUG}#g" ${DEPLOY_FILE}
+    - sed -i "s#__ingressdomain__#${ENV_URL}#g" ${DEPLOY_FILE}
+    - cat ${DEPLOY_FILE}
+    - currentPath=`pwd`
+    - rm -rf $currentPath/deploy_k8s/config && mkdir -p $currentPath/deploy_k8s/config  && cp -f ${DEPLOY_FILE} $currentPath/deploy_k8s/config/deploy.yml
+    - docker run -v $currentPath/deploy_k8s/config:/deploy_k8s/config --rm ${DEPLOY_IMAGE} apply -f /deploy_k8s/config/deploy.yml
+  rules:
+    - if: " $RUN_DEPLOY_K8S == 'no'"
+      when: never
+    - if: $CI_COMMIT_REF_NAME =~ /^dev*/
+      when: always
+    - when: manual
+
+
+
+
+## 回滚
+.rollout_k8s:
+  stage: rollout_k8s
+  script:
+    - docker run --rm ${DEPLOY_IMAGE} rollout history deployment ${APP_NAME} -n ${NAMESPACE} && rollout undo deployment ${APP_NAME} -n ${NAMESPACE}
+  rules:
+    - if: " $RUN_DEPLOY_K8S == 'no' "
+      when: never
+    - if: $CI_COMMIT_REF_NAME =~ /^release*/ || $CI_COMMIT_REF_NAME =~ /master*/ || $CI_COMMIT_REF_NAME =~ /^dev*/ || $CI_COMMIT_REF_NAME =~ /^sit*/
+      when: on_failure
+    - when: manual
+
+## 使用kubectl镜像发布
+.upgrade_k8s_image:
+  stage: upgrade_k8s_image
+  retry: 2
+  script:
+    - sudo sshpass -p ef@2022 ssh appuser@10.10.11.240 "/home/appuser/deploy.sh ${NAMESPACE} ${APP_NAME} ${IMAGE_NAME}"
+  tags:
+    - k8s-deploy
+  rules:
+    - if: " $UPGRADE_IMAGE_K8S == 'no' "
+      when: never
+    - if: $CI_COMMIT_REF_NAME =~ /^dev*/
+      when: always
+    - when: manual
+
